@@ -21,6 +21,6 @@ if __name__ == '__main__':
     print(game)
 
     while game.is_game_over is None:
-        game = game.make_move(p1.make_move(game))
-        game = game.make_move(p2.make_move(game))
+        game = game.make_move(p1.get_move(game))
+        game = game.make_move(p2.get_move(game))
         print(game)

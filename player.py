@@ -7,5 +7,5 @@ class Player:
         self.name = name
         self.strategy = strategy
 
-    def make_move(self, game_state: GameState):
+    def get_move(self, game_state: GameState):
         return self.strategy(game_state)
