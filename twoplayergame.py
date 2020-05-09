@@ -3,9 +3,9 @@ import numpy as np
 
 
 class GameState:
-    board_size = 3
+    BoardSize = 3
 
-    def __init__(self, players: np.array, turn: int, game_board=np.zeros((board_size, board_size))):
+    def __init__(self, players: np.array, turn: int, game_board=np.zeros((BoardSize, BoardSize))):
         assert (turn == -1 or turn == 1)
         self.game_board = game_board
         self.players = players
@@ -21,11 +21,15 @@ class GameState:
         assert (0 <= move_index <= 8)
         assert (move_index in self.get_valid_moves())
 
-        game_board = self.game_board
+        game_board = self.game_board.copy()
         move = self.move_map[move_index]
         game_board[move[0], move[1]] = self.turn
 
-        next_turn = -1 if self.turn == 1 else 1
+        if self.turn == 1:
+            next_turn = -1
+        else:
+            next_turn = 1
+
         return GameState(self.players, next_turn, game_board)
 
     def get_valid_moves(self) -> list:
@@ -58,12 +62,19 @@ class GameState:
         winning_possibilities = np.append(winning_possibilities, diagonal)
         winning_possibilities = np.append(winning_possibilities, inv_diagonal)
 
-        if GameState.check_board(winning_possibilities, GameState.board_size):
+        if GameState.check_board(winning_possibilities, GameState.BoardSize):
             self.winner = self.players[0]
             return self.winner
 
-        if GameState.check_board(winning_possibilities, - GameState.board_size):
+        if GameState.check_board(winning_possibilities, - GameState.BoardSize):
             self.winner = self.players[1]
+            return self.winner
+
+        # Fix this hack!
+        flat = self.game_board.flatten()
+        zeros_indices, = np.where(flat == 0)
+        if len(zeros_indices) == 0:
+            self.winner = 'Draw'
             return self.winner
 
         return None

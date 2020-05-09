@@ -12,6 +12,7 @@ class MonteCarloTreeSearchNode:
         self.children = np.array([], dtype=MonteCarloTreeSearchNode)
         self.untried_actions = game_state.get_valid_moves()
         self.wins = dict(map(lambda player: (player, 0), game_state.players))
+        self.wins['Draw'] = 0
         self.visits = 0
 
     def select(self, c) -> MonteCarloTreeSearchNode:
@@ -37,10 +38,10 @@ class MonteCarloTreeSearchNode:
     def rollout(self) -> float:
         print(f'Rollout now for {self.__repr__()}')
         rollout_state = self.game_state
-        while not rollout_state.is_game_over:
+        while rollout_state.is_game_over is None:
             possible_moves = rollout_state.get_valid_moves()
             move = possible_moves[np.random.randint(len(possible_moves))]
-            rollout_state.make_move(move)
+            rollout_state = rollout_state.make_move(move)
         print(f'The winner of this rollout: {rollout_state.winner}')
         return rollout_state.winner
 
@@ -56,7 +57,7 @@ class MonteCarloTreeSearchNode:
 
     @staticmethod
     def get_ucb(child: MonteCarloTreeSearchNode, c):
-        child.win_ratio + c * np.sqrt(np.log(child.parent.visits) / child.visits)
+        return child.win_ratio + c * np.sqrt(np.log(child.parent.visits) / child.visits)
 
     @property
     def win_ratio(self):
