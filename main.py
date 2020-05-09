@@ -6,15 +6,21 @@ from functools import partial
 import numpy as np
 import random
 
+
+def partial_mcts(number_of_simulation, game_state):
+    return MonteCarloTreeSearch.get_best_move(game_state, number_of_simulation)
+
+
 if __name__ == '__main__':
-    game = GameState()
+    simulation_count = 100
 
-    mcts_strategy = partial(MonteCarloTreeSearch.get_best_move, number_of_simulation=100)
-    p1 = Player('p1', mcts_strategy)
-
+    p1 = Player('p1', partial(partial_mcts, simulation_count))
     p2 = Player('p2', lambda game_state: random.choice(game_state.get_legal_actions()))
 
-    while game.is_game_over() == np.inf:
+    game = GameState(np.array([p1, p2]), turn=0)
+    print(game)
+
+    while game.is_game_over is None:
         game = game.make_move(p1.make_move(game))
         game = game.make_move(p2.make_move(game))
         print(game)
