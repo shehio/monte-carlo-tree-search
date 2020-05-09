@@ -1,3 +1,5 @@
+import numpy as np
+
 from twoplayergame import GameState
 from montecarlotreesearchnode import MonteCarloTreeSearchNode
 
@@ -13,7 +15,7 @@ class MonteCarloTreeSearch:
     def get_best_move(self, number_of_simulation=100):
         for i in range(number_of_simulation):
             print(f'Iteration number: {i + 1}')
-            leaf_node = self.root.select()
+            leaf_node = self.root.select(c=np.sqrt(2))
             reward = leaf_node.rollout()
             leaf_node.backpropagate(reward)
 
@@ -31,4 +33,3 @@ class MonteCarloTreeSearch:
             print(popped_node)
             for child_node in popped_node.children:
                 queue.append(child_node)
-
