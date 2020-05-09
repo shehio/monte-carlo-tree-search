@@ -10,17 +10,17 @@ class MonteCarloTreeSearch:
     # Note that, at number_of_simulation = inf, MCTS --> Minimax.
     @staticmethod
     def get_best_move(game_state: GameState, number_of_simulation=100):
-        root = MonteCarloTreeSearchNode(game_state)
+        root = MonteCarloTreeSearchNode(game_state, None)
         for i in range(number_of_simulation):
             print(f'Iteration number: {i + 1}')
             leaf_node = root.select(c=np.sqrt(2))
-            reward = leaf_node.rollout()
-            leaf_node.backpropagate(reward)
+            winner = leaf_node.rollout()
+            leaf_node.backpropagate(winner)
 
         MonteCarloTreeSearch.__print_tree(root)
 
         # When finally choosing an action, we shouldn't be exploring.
-        return root.select_child_with_max_ucb(c=0)
+        return root.select_child_with_max_ucb(c=0).action
 
     @staticmethod
     def __print_tree(root: MonteCarloTreeSearchNode):

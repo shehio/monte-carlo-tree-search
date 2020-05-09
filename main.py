@@ -17,7 +17,7 @@ if __name__ == '__main__':
     p1 = Player('p1', partial(partial_mcts, simulation_count))
     p2 = Player('p2', lambda game_state: random.choice(game_state.get_legal_actions()))
 
-    game = GameState(np.array([p1, p2]), turn=0)
+    game = GameState(np.array([p1, p2]), turn=1)
     print(game)
 
     while game.is_game_over is None:
