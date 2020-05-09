@@ -19,10 +19,10 @@ class MonteCarloTreeSearchNode:
         leaf_node = self
 
         while not leaf_node.is_terminal:
-            if not self.is_fully_expanded:
-                return self.expand()
+            if not leaf_node.is_fully_expanded:
+                return leaf_node.expand()
             else:
-                leaf_node = self.select_child_with_max_ucb(c)
+                leaf_node = leaf_node.select_child_with_max_ucb(c)
 
         return leaf_node
 
@@ -72,7 +72,7 @@ class MonteCarloTreeSearchNode:
 
     @property
     def is_terminal(self):
-        return self.game_state.is_game_over is not None
+        return self.game_state.winner is not None
 
     def __repr__(self):
         return f'TreeNode: {id(self)}'
