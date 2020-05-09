@@ -11,4 +11,24 @@ class MonteCarloTreeSearch:
     # Only get the best move to make according to simulation, regardless of how deep the actual game tree is.
     # Note that, at number_of_simulation = inf, MCTS --> Minimax.
     def get_best_move(self, number_of_simulation=100):
-        pass
+        for i in range(number_of_simulation):
+            print(f'Iteration number: {i + 1}')
+            leaf_node = self.root.select()
+            reward = leaf_node.rollout()
+            leaf_node.backpropagate(reward)
+
+        self.__print_tree(self.root)
+
+        # When finally choosing an action, we shouldn't be exploring.
+        return self.root.select_child_with_max_ucb(c=0)
+
+    @staticmethod
+    def __print_tree(root: MonteCarloTreeSearchNode):
+        print('\nPrinting the current tree:')
+        queue = [root]
+        while queue:
+            popped_node = queue.pop()
+            print(popped_node)
+            for child_node in popped_node.children:
+                queue.append(child_node)
+
