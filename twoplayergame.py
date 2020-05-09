@@ -8,8 +8,8 @@ class GameState:
     def make_move(self, player, move) -> GameState:  # Returns a game state.
         pass
 
-    def is_game_over(self):  # Say returns -1 for p1 win, 1 for p2 win, 0 for draw, and -inf for game still in progress.
+    def is_game_over(self):  # Returns the player that won and None if the game is still in progress.
         pass
 
-    def get_legal_actions(self, player):
+    def get_legal_actions(self, player) -> list:
         pass
