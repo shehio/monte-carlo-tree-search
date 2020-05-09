@@ -36,7 +36,16 @@ class MonteCarloTreeSearchNode:
         return child_node
 
     def rollout(self) -> float:
-        pass
+        print(f'Rollout now for {self.__repr__()}')
+        rollout_state = self.game_state
+        current_player = self.player
+        while not rollout_state.is_game_over:
+            possible_moves = rollout_state.get_legal_actions(current_player)
+            current_player = self.opponent if current_player == self.player else self.player
+            move = possible_moves(np.random.randint(len(possible_moves)))
+            rollout_state.make_move(current_player, move)
+        print(f'The rollout result: {rollout_state.game_result}')
+        return rollout_state.game_result
 
     def backpropagate(self, who_won):
         self.visits += 1
@@ -69,3 +78,7 @@ class MonteCarloTreeSearchNode:
 
     def __repr__(self):
         return f'TreeNode: {id(self)}'
+
+    def __str__(self):
+        return f'TreeNode: {id(self)}, number of visits: {self.visits}, win ratio: {self.win_ratio},' \
+               f' fully expanded: {self.is_fully_expanded}, children: {self.children}'
