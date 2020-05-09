@@ -19,7 +19,7 @@ class GameState:
     # Assigns a -1 to player 1, and 1 to player 2.
     def make_move(self, move_index: int) -> GameState:  # Returns a game state.
         assert (0 <= move_index <= 8)
-        assert (move_index in self.get_legal_actions())
+        assert (move_index in self.get_valid_moves())
 
         game_board = self.game_board
         move = self.move_map[move_index]
@@ -28,13 +28,13 @@ class GameState:
         next_turn = -1 if self.turn == 1 else 1
         return GameState(self.players, next_turn, game_board)
 
-    def get_legal_actions(self) -> list:
-        actions = []
+    def get_valid_moves(self) -> list:
+        moves = []
         for move in self.reverse_move_map.keys():
             if self.game_board[move[0]][move[1]] == 0:
-                actions.append(self.reverse_move_map[move])
+                moves.append(self.reverse_move_map[move])
 
-        return actions
+        return moves
 
     def __repr__(self):
         return self.game_board.__repr__()

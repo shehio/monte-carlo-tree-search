@@ -10,7 +10,7 @@ class MonteCarloTreeSearchNode:
         self.parent = parent
         self.action = action
         self.children = np.array([], dtype=MonteCarloTreeSearchNode)
-        self.untried_actions = game_state.get_legal_actions()
+        self.untried_actions = game_state.get_valid_moves()
         self.wins = dict(map(lambda player: (player, 0), game_state.players))
         self.visits = 0
 
@@ -38,7 +38,7 @@ class MonteCarloTreeSearchNode:
         print(f'Rollout now for {self.__repr__()}')
         rollout_state = self.game_state
         while not rollout_state.is_game_over:
-            possible_moves = rollout_state.get_legal_actions()
+            possible_moves = rollout_state.get_valid_moves()
             move = possible_moves[np.random.randint(len(possible_moves))]
             rollout_state.make_move(move)
         print(f'The winner of this rollout: {rollout_state.winner}')
@@ -67,7 +67,7 @@ class MonteCarloTreeSearchNode:
 
     @property
     def is_fully_expanded(self):
-        return len(self.children) == len(self.game_state.get_legal_actions())
+        return len(self.children) == len(self.game_state.get_valid_moves())
 
     @property
     def is_terminal(self):
