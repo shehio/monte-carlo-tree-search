@@ -2,6 +2,7 @@ from __future__ import annotations
 import logging
 import numpy as np
 
+from drawplayer import OnlyDrawPlayer
 from twoplayergame import GameState
 
 
@@ -13,7 +14,7 @@ class MonteCarloTreeSearchNode:
         self.children = np.array([], dtype=MonteCarloTreeSearchNode)
         self.untried_actions = game_state.get_valid_moves()
         self.wins = dict(map(lambda player: (player, 0), game_state.players))
-        self.wins['Draw'] = 0
+        self.wins[OnlyDrawPlayer] = 0
         self.visits = 0
 
     def select(self, c) -> MonteCarloTreeSearchNode:

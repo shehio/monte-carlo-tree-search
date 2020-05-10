@@ -1,9 +1,11 @@
 from __future__ import annotations
 import numpy as np
 
+from drawplayer import OnlyDrawPlayer
+
 
 class GameState:
-    BoardSize = 3
+    BoardSize = 4
 
     def __init__(self, players: np.array, turn: int, game_board=np.zeros((BoardSize, BoardSize))):
         assert (turn == -1 or turn == 1)
@@ -18,7 +20,7 @@ class GameState:
 
     # Assigns a -1 to player 1, and 1 to player 2.
     def make_move(self, move_index: int) -> GameState:  # Returns a game state.
-        assert (0 <= move_index <= 8)
+        assert (0 <= move_index <= GameState.BoardSize ** 2 - 1)
         assert (move_index in self.get_valid_moves())
 
         game_board = self.game_board.copy()
@@ -55,12 +57,10 @@ class GameState:
     def is_game_over(self):  # Returns the player that won and None if the game is still in progress.
         row_sum = self.game_board.sum(0)
         col_sum = self.game_board.sum(1)
-        diagonal = self.game_board.trace()
-        inv_diagonal = self.game_board[::-1].trace()
+        diagonal = [self.game_board.trace()]
+        inv_diagonal = [self.game_board[::-1].trace()]
 
-        winning_possibilities = np.append(row_sum, col_sum)
-        winning_possibilities = np.append(winning_possibilities, diagonal)
-        winning_possibilities = np.append(winning_possibilities, inv_diagonal)
+        winning_possibilities = np.concatenate((row_sum, col_sum, diagonal, inv_diagonal))
 
         if GameState.check_board(winning_possibilities, GameState.BoardSize):
             self.winner = self.players[0]
@@ -70,11 +70,9 @@ class GameState:
             self.winner = self.players[1]
             return self.winner
 
-        # Fix this hack!
-        flat = self.game_board.flatten()
-        zeros_indices, = np.where(flat == 0)
+        zeros_indices, = np.where(self.game_board.flatten() == 0)
         if len(zeros_indices) == 0:
-            self.winner = 'Draw'
+            self.winner = OnlyDrawPlayer
             return self.winner
 
         return None
