@@ -57,6 +57,8 @@ class MonteCarloTreeSearchNode:
         if self.parent is not None:
             self.parent.backpropagate(who_won)
 
+    # This ratio tries to maximize the winning. It doesn't try to minimize losing. The significant difference can be
+    # seen when the agent plays a few times.
     def select_child_with_max_ucb(self, c) -> MonteCarloTreeSearchNode:
         ucb_values = list(map(lambda child: MonteCarloTreeSearchNode.get_ucb(child, c), self.children))
         return self.children[np.argmax(ucb_values)]
