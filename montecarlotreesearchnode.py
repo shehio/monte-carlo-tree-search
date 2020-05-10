@@ -45,8 +45,7 @@ class MonteCarloTreeSearchNode:
         logging.debug(f'Rollout now for {self.__repr__()}')
         rollout_state = self.game_state
         while not rollout_state.is_game_over:
-            possible_moves = rollout_state.get_valid_moves()
-            move = possible_moves[np.random.randint(len(possible_moves))]
+            move = self.get_move_from_heuristic_rollout_strategy(rollout_state)
             rollout_state = rollout_state.make_move(move)
         logging.debug(f'The winner of this rollout: {rollout_state.winner}')
         return rollout_state.winner
@@ -66,6 +65,15 @@ class MonteCarloTreeSearchNode:
     @staticmethod
     def get_ucb(child: MonteCarloTreeSearchNode, c):
         return child.win_ratio + c * np.sqrt(np.log(child.parent.visits) / child.visits)
+
+    @staticmethod
+    def get_move_from_heuristic_rollout_strategy(rollout_state: GameState) -> int:
+        return rollout_state.get_heuristic_move()
+
+    @staticmethod
+    def get_move_from_simple_rollout_strategy(rollout_state: GameState) -> int:
+        possible_moves = rollout_state.get_valid_moves()
+        return possible_moves[np.random.randint(len(possible_moves))]
 
     @property
     def win_ratio(self):

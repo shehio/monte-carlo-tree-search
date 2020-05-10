@@ -5,7 +5,7 @@ from drawplayer import OnlyDrawPlayer
 
 
 class GameState:
-    BoardSize = 5
+    BoardSize = 3
 
     def __init__(self, players: np.array, turn: int, game_board=np.zeros((BoardSize, BoardSize))):
         assert (turn == -1 or turn == 1)
@@ -40,6 +40,38 @@ class GameState:
 
     def __repr__(self):
         return self.game_board.__repr__()
+
+    def get_heuristic_move(self):
+        winning_number = self.turn * (GameState.BoardSize - 1)
+
+        row_sum = self.game_board.sum(0)
+        for i in range(0, len(row_sum)):
+            if row_sum[i] == winning_number - 1:
+                for j in range(0, GameState.BoardSize):
+                    if self.game_board[i][j] == 0:
+                        return self.reverse_move_map[(i, j)]
+
+        col_sum = self.game_board.sum(1)
+        for j in range(0, len(row_sum)):
+            if col_sum[j] == winning_number - 1:
+                for i in range(0, GameState.BoardSize):
+                    if self.game_board[i][j] == 0:
+                        return self.reverse_move_map[(i, j)]
+
+        diagonal = [self.game_board.trace()]
+        if diagonal == winning_number - 1:
+            for i in range(0, GameState.BoardSize):
+                if self.game_board[i][i] == 0:
+                    return self.reverse_move_map[(i, i)]
+
+        inv_diagonal = [self.game_board[::-1].trace()]
+        if inv_diagonal == winning_number - 1:
+            for i in range(0, GameState.BoardSize):
+                if self.game_board[i][(GameState.BoardSize - 1) - i] == 0:
+                    return self.reverse_move_map[(i, (GameState.BoardSize - 1) - i)]
+
+        valid_moves = self.get_valid_moves()
+        return valid_moves[np.random.randint(len(valid_moves))]
 
     @property
     def current_player(self):

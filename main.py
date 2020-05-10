@@ -17,7 +17,7 @@ if __name__ == '__main__':
     # https://docs.python.org/3/library/logging.html#levels
     logging.basicConfig(format='%(message)s', stream=sys.stdout, level=logging.INFO)
 
-    simulation_count = 10
+    simulation_count = 100
     p1 = Player('P1', partial(partial_mcts, simulation_count))
     p2 = Player('P2', lambda game_state: random.choice(game_state.get_valid_moves()))
     players = [p1, p2]
