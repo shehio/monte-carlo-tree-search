@@ -5,7 +5,7 @@ from drawplayer import OnlyDrawPlayer
 
 
 class GameState:
-    BoardSize = 4
+    BoardSize = 5
 
     def __init__(self, players: np.array, turn: int, game_board=np.zeros((BoardSize, BoardSize))):
         assert (turn == -1 or turn == 1)

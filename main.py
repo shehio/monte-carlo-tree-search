@@ -33,4 +33,4 @@ if __name__ == '__main__':
         print(game)
         i = i + 1
 
-    print(f'\n{game.is_game_over} won in {i} turns.')
+    print(f'\n{game.winner} won in {i} turns.')

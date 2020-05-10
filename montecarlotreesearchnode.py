@@ -7,6 +7,8 @@ from gamestate import GameState
 
 
 class MonteCarloTreeSearchNode:
+    # This action in the params is the action that the player from the parent MCTS node, i.e. the prev game state, has
+    # played. This information is critical for when we're calculating the win ratio (see below).
     def __init__(self, game_state: GameState, parent: MonteCarloTreeSearchNode, action=None):
         self.game_state = game_state
         self.parent = parent
@@ -68,7 +70,7 @@ class MonteCarloTreeSearchNode:
         # If the node hasn't been visited, then the win_ratio (part of ucb) is inf. This means it will be selected.
         if self.visits == 0:
             return np.inf
-        return self.wins[self.game_state.current_player] / self.visits
+        return self.wins[self.parent.game_state.current_player] / self.visits
 
     @property
     def is_fully_expanded(self):
