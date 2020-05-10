@@ -14,7 +14,7 @@ class MonteCarloTreeSearch:
         root = MonteCarloTreeSearchNode(game_state, None)
         for i in range(number_of_simulation):
             logging.debug(f'\nIteration number: {i + 1}')
-            leaf_node = root.select(c=np.sqrt(2))
+            leaf_node = root.select(c=np.sqrt(2))  # @Todo: Move this c to be a parameter of MCTS
             winner = leaf_node.rollout()
             leaf_node.backpropagate(winner)
 
