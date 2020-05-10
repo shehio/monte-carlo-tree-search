@@ -25,7 +25,7 @@ class MonteCarloTreeSearch:
 
     @staticmethod
     def __print_tree(root: MonteCarloTreeSearchNode):
-        logging.debug('\nlogging.debuging the current tree:')
+        logging.debug('\n Printing the current tree:')
         queue = [root]
         while queue:
             popped_node = queue.pop()

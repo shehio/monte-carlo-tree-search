@@ -18,7 +18,6 @@ class MonteCarloTreeSearchNode:
 
     def select(self, c) -> MonteCarloTreeSearchNode:
         leaf_node = self
-
         while not leaf_node.is_terminal:
             if not leaf_node.is_fully_expanded:
                 return leaf_node.expand()
@@ -36,6 +35,9 @@ class MonteCarloTreeSearchNode:
         logging.debug(f'Created {child_node.__repr__()}')
         return child_node
 
+    # The reason why we're not learning a lot is that we nudge our decision making mechanism towards states that are
+    # only advantageous from a random agent's perspective, since the roll-out assumes that both agents play randomly
+    # in future rounds.
     def rollout(self) -> float:
         logging.debug(f'Rollout now for {self.__repr__()}')
         rollout_state = self.game_state

@@ -11,10 +11,10 @@ class GameState:
         self.players = players
         self.turn = turn
         self.winner = None
-        self.move_map = {0: (0, 0), 1: (0, 1), 2: (0, 2), 3: (1, 0),
-                         4: (1, 1), 5: (1, 2), 6: (2, 0), 7: (2, 1), 8: (2, 2)}
-        self.reverse_move_map = {(0, 0): 0, (0, 1): 1, (0, 2): 2, (1, 0): 3,
-                                 (1, 1): 4, (1, 2): 5, (2, 0): 6, (2, 1): 7, (2, 2): 8}
+        self.move_map = dict(map(
+            lambda x: (x, (np.int(x / GameState.BoardSize), x % GameState.BoardSize)),
+            list(range(0, GameState.BoardSize ** 2))))
+        self.reverse_move_map = {value: key for (key, value) in self.move_map.items()}
 
     # Assigns a -1 to player 1, and 1 to player 2.
     def make_move(self, move_index: int) -> GameState:  # Returns a game state.
