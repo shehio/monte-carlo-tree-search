@@ -12,7 +12,7 @@ class MonteCarloTreeSearch:
     def get_best_move(game_state: GameState, number_of_simulation=100):
         root = MonteCarloTreeSearchNode(game_state, None)
         for i in range(number_of_simulation):
-            print(f'Iteration number: {i + 1}')
+            print(f'\nIteration number: {i + 1}')
             leaf_node = root.select(c=np.sqrt(2))
             winner = leaf_node.rollout()
             leaf_node.backpropagate(winner)

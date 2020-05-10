@@ -12,7 +12,7 @@ def partial_mcts(number_of_simulation, game_state):
 
 
 if __name__ == '__main__':
-    simulation_count = 100
+    simulation_count = 10
 
     p1 = Player('p1', partial(partial_mcts, simulation_count))
     p2 = Player('p2', lambda game_state: random.choice(game_state.get_valid_moves()))
@@ -25,4 +25,4 @@ if __name__ == '__main__':
         m1 = p1.get_move(game)
         game = game.make_move(m1)
         game = game.make_move(p2.get_move(game))
-        print(game)
+        print(f'\n{game}')

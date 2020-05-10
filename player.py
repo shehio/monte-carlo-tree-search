@@ -9,3 +9,6 @@ class Player:
 
     def get_move(self, game_state: GameState):
         return self.strategy(game_state)
+
+    def __repr__(self):
+        return f'player: {self.name}'
