@@ -27,12 +27,7 @@ class GameState:
         move = self.move_map[move_index]
         game_board[move[0], move[1]] = self.turn
 
-        if self.turn == 1:
-            next_turn = -1
-        else:
-            next_turn = 1
-
-        return GameState(self.players, next_turn, game_board)
+        return GameState(self.players, self.turn * -1, game_board)
 
     # In other complete information games, like chess or go, these moves would depend on the current player.
     def get_valid_moves(self) -> list:
@@ -55,16 +50,12 @@ class GameState:
 
     @property
     def is_game_over(self):  # Returns the player that won and None if the game is still in progress.
-        row_sum = self.game_board.sum(0)
-        col_sum = self.game_board.sum(1)
-        diagonal = [self.game_board.trace()]
-        inv_diagonal = [self.game_board[::-1].trace()]
-        winning_possibilities = np.concatenate((row_sum, col_sum, diagonal, inv_diagonal))
+        winning_possibilities = self.__get_winning_possibilities()
 
-        if GameState.check_board(winning_possibilities, GameState.BoardSize):
+        if GameState.__check_board(winning_possibilities, GameState.BoardSize):
             self.winner = self.players[0]
 
-        if GameState.check_board(winning_possibilities, - GameState.BoardSize):
+        if GameState.__check_board(winning_possibilities, - GameState.BoardSize):
             self.winner = self.players[1]
 
         zeros_indices, = np.where(self.game_board.flatten() == 0)
@@ -73,6 +64,13 @@ class GameState:
 
         return self.winner is not None
 
+    def __get_winning_possibilities(self):
+        row_sum = self.game_board.sum(0)
+        col_sum = self.game_board.sum(1)
+        diagonal = [self.game_board.trace()]
+        inv_diagonal = [self.game_board[::-1].trace()]
+        return np.concatenate((row_sum, col_sum, diagonal, inv_diagonal))
+
     @staticmethod
-    def check_board(winning_possibilities, winning_number):
+    def __check_board(winning_possibilities, winning_number):
         return any(winning_possibilities == winning_number)
