@@ -1,5 +1,5 @@
 from typing import Callable
-from twoplayergame import GameState
+from gamestate import GameState
 
 
 class Player:

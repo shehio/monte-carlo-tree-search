@@ -3,7 +3,7 @@ import logging
 import numpy as np
 
 from drawplayer import OnlyDrawPlayer
-from twoplayergame import GameState
+from gamestate import GameState
 
 
 class MonteCarloTreeSearchNode:

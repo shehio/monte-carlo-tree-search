@@ -1,7 +1,7 @@
 import numpy as np
 import logging
 
-from twoplayergame import GameState
+from gamestate import GameState
 from montecarlotreesearchnode import MonteCarloTreeSearchNode
 
 

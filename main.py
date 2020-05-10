@@ -4,7 +4,7 @@ import numpy as np
 import random
 import sys
 
-from twoplayergame import GameState
+from gamestate import GameState
 from montecarlotreesearch import MonteCarloTreeSearch
 from player import Player
 
