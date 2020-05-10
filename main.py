@@ -1,12 +1,12 @@
-from twoplayergame import GameState
-from montecarlotreesearch import MonteCarloTreeSearch
-from player import Player
-
 from functools import partial
 import logging
 import numpy as np
 import random
 import sys
+
+from twoplayergame import GameState
+from montecarlotreesearch import MonteCarloTreeSearch
+from player import Player
 
 
 def partial_mcts(number_of_simulation, game_state):
@@ -16,18 +16,21 @@ def partial_mcts(number_of_simulation, game_state):
 if __name__ == '__main__':
     # https://docs.python.org/3/library/logging.html#levels
     logging.basicConfig(format='%(message)s', stream=sys.stdout, level=logging.DEBUG)
-    logging.debug('Hello World!')
 
-    simulation_count = 10
-    p1 = Player('p1', partial(partial_mcts, simulation_count))
-    p2 = Player('p2', lambda game_state: random.choice(game_state.get_valid_moves()))
+    simulation_count = 100
+    p1 = Player('P1', partial(partial_mcts, simulation_count))
+    p2 = Player('P2', lambda game_state: random.choice(game_state.get_valid_moves()))
+    players = [p1, p2]
 
     game = GameState(np.array([p1, p2]), turn=1)
-    print(game)
+    logging.debug(game)
 
+    i = 0
     while game.is_game_over is None:
-        valid_moves = game.get_valid_moves()
-        m1 = p1.get_move(game)
-        game = game.make_move(m1)
-        game = game.make_move(p2.get_move(game))
-        print(f'\n{game}')
+        player = players[i % 2]
+        logging.info(f'\n{player}\'s turn')
+        game = game.make_move(player.get_move(game))
+        print(game)
+        i = i + 1
+
+    print(f'\n{game.is_game_over} won in {i} turns.')

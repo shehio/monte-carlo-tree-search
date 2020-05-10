@@ -1,4 +1,5 @@
 from __future__ import annotations
+import logging
 import numpy as np
 
 from twoplayergame import GameState
@@ -27,22 +28,22 @@ class MonteCarloTreeSearchNode:
         return leaf_node
 
     def expand(self) -> MonteCarloTreeSearchNode:
-        print(f'Expanding for {self.__repr__()}')
+        logging.debug(f'Expanding for {self.__repr__()}')
         action = self.untried_actions.pop()
         new_game_state = self.game_state.make_move(action)
         child_node = MonteCarloTreeSearchNode(new_game_state, self, action)
         self.children = np.append(self.children, child_node)
-        print(f'Created {child_node.__repr__()}')
+        logging.debug(f'Created {child_node.__repr__()}')
         return child_node
 
     def rollout(self) -> float:
-        print(f'Rollout now for {self.__repr__()}')
+        logging.debug(f'Rollout now for {self.__repr__()}')
         rollout_state = self.game_state
         while rollout_state.is_game_over is None:
             possible_moves = rollout_state.get_valid_moves()
             move = possible_moves[np.random.randint(len(possible_moves))]
             rollout_state = rollout_state.make_move(move)
-        print(f'The winner of this rollout: {rollout_state.winner}')
+        logging.debug(f'The winner of this rollout: {rollout_state.winner}')
         return rollout_state.winner
 
     def backpropagate(self, who_won):
@@ -78,5 +79,6 @@ class MonteCarloTreeSearchNode:
         return f'TreeNode: {id(self)}'
 
     def __str__(self):
-        return f'TreeNode: {id(self)}, number of visits: {self.visits}, win ratio: {self.win_ratio},' \
-               f' fully expanded: {self.is_fully_expanded}, children: {self.children}'
+        return f'TreeNode: {id(self)}, action: {self.action}, number of visits: {self.visits}, ' \
+               f'win ratio: {self.win_ratio}, fully expanded: {self.is_fully_expanded}, ' \
+               f'children: {self.children}'

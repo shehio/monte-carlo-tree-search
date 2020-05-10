@@ -11,4 +11,4 @@ class Player:
         return self.strategy(game_state)
 
     def __repr__(self):
-        return f'player: {self.name}'
+        return f'Player {self.name}'
