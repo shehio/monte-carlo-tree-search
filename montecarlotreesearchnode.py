@@ -42,7 +42,7 @@ class MonteCarloTreeSearchNode:
     def rollout(self) -> float:
         logging.debug(f'Rollout now for {self.__repr__()}')
         rollout_state = self.game_state
-        while rollout_state.is_game_over is None:
+        while not rollout_state.is_game_over:
             possible_moves = rollout_state.get_valid_moves()
             move = possible_moves[np.random.randint(len(possible_moves))]
             rollout_state = rollout_state.make_move(move)

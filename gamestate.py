@@ -19,7 +19,7 @@ class GameState:
         self.reverse_move_map = {value: key for (key, value) in self.move_map.items()}
 
     # Assigns a -1 to player 1, and 1 to player 2.
-    def make_move(self, move_index: int) -> GameState:  # Returns a game state.
+    def make_move(self, move_index: int) -> GameState:
         assert (0 <= move_index <= GameState.BoardSize ** 2 - 1)
         assert (move_index in self.get_valid_moves())
 
@@ -34,6 +34,7 @@ class GameState:
 
         return GameState(self.players, next_turn, game_board)
 
+    # In other complete information games, like chess or go, these moves would depend on the current player.
     def get_valid_moves(self) -> list:
         moves = []
         for move in self.reverse_move_map.keys():
@@ -48,10 +49,9 @@ class GameState:
     @property
     def current_player(self):
         if self.turn == -1:
-            self.turn = 1
+            return self.players[1]
         else:
-            self.turn = 0
-        return self.players[self.turn]
+            return self.players[0]
 
     @property
     def is_game_over(self):  # Returns the player that won and None if the game is still in progress.
@@ -59,23 +59,19 @@ class GameState:
         col_sum = self.game_board.sum(1)
         diagonal = [self.game_board.trace()]
         inv_diagonal = [self.game_board[::-1].trace()]
-
         winning_possibilities = np.concatenate((row_sum, col_sum, diagonal, inv_diagonal))
 
         if GameState.check_board(winning_possibilities, GameState.BoardSize):
             self.winner = self.players[0]
-            return self.winner
 
         if GameState.check_board(winning_possibilities, - GameState.BoardSize):
             self.winner = self.players[1]
-            return self.winner
 
         zeros_indices, = np.where(self.game_board.flatten() == 0)
         if len(zeros_indices) == 0:
             self.winner = OnlyDrawPlayer
-            return self.winner
 
-        return None
+        return self.winner is not None
 
     @staticmethod
     def check_board(winning_possibilities, winning_number):

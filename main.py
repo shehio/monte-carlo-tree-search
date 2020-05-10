@@ -26,7 +26,7 @@ if __name__ == '__main__':
     logging.debug(game)
 
     i = 0
-    while game.is_game_over is None:
+    while not game.is_game_over:
         player = players[i % 2]
         logging.info(f'\n{player}\'s turn')
         game = game.make_move(player.get_move(game))
