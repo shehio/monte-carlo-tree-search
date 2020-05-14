@@ -2,8 +2,9 @@ from __future__ import annotations
 import logging
 import numpy as np
 
-from drawplayer import OnlyDrawPlayer
+from drawplayer import SingletonDrawPlayer
 from gamestate import GameState
+from rolloutstrategyhelper import RolloutStrategyHelper
 
 
 class MonteCarloTreeSearchNode:
@@ -16,7 +17,7 @@ class MonteCarloTreeSearchNode:
         self.children = np.array([], dtype=MonteCarloTreeSearchNode)
         self.untried_actions = game_state.get_valid_moves()
         self.wins = dict(map(lambda player: (player, 0), game_state.players))
-        self.wins[OnlyDrawPlayer] = 0
+        self.wins[SingletonDrawPlayer] = 0
         self.visits = 0
 
     def select(self, c) -> MonteCarloTreeSearchNode:
@@ -38,14 +39,12 @@ class MonteCarloTreeSearchNode:
         logging.debug(f'Created {child_node.__repr__()}')
         return child_node
 
-    # The reason why we're not learning a lot is that we nudge our decision making mechanism towards states that are
-    # only advantageous from a random agent's perspective, since the roll-out assumes that both agents play randomly
-    # in future rounds.
-    def rollout(self) -> float:
+    # The learning depends highly on the rollout strategy.
+    def rollout(self):
         logging.debug(f'Rollout now for {self.__repr__()}')
         rollout_state = self.game_state
         while not rollout_state.is_game_over:
-            move = self.get_move_from_heuristic_rollout_strategy(rollout_state)
+            move = MonteCarloTreeSearchNode.get_move_from_rollout_strategy(rollout_state)
             rollout_state = rollout_state.make_move(move)
         logging.debug(f'The winner of this rollout: {rollout_state.winner}')
         return rollout_state.winner
@@ -56,8 +55,7 @@ class MonteCarloTreeSearchNode:
         if self.parent is not None:
             self.parent.backpropagate(who_won)
 
-    # This ratio tries to maximize the winning. It doesn't try to minimize losing. The significant difference can be
-    # seen when the agent plays a few times.
+    # This ratio tries to maximize the winning. It doesn't try to minimize losing.
     def select_child_with_max_ucb(self, c) -> MonteCarloTreeSearchNode:
         ucb_values = list(map(lambda child: MonteCarloTreeSearchNode.get_ucb(child, c), self.children))
         return self.children[np.argmax(ucb_values)]
@@ -67,13 +65,8 @@ class MonteCarloTreeSearchNode:
         return child.win_ratio + c * np.sqrt(np.log(child.parent.visits) / child.visits)
 
     @staticmethod
-    def get_move_from_heuristic_rollout_strategy(rollout_state: GameState) -> int:
-        return rollout_state.get_heuristic_move()
-
-    @staticmethod
-    def get_move_from_simple_rollout_strategy(rollout_state: GameState) -> int:
-        possible_moves = rollout_state.get_valid_moves()
-        return possible_moves[np.random.randint(len(possible_moves))]
+    def get_move_from_rollout_strategy(rollout_state: GameState) -> int:
+        return RolloutStrategyHelper.get_heuristic_move(rollout_state)
 
     @property
     def win_ratio(self):

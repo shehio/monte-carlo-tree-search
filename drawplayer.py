@@ -9,4 +9,4 @@ class DrawPlayer:
         return hash(self.name)
 
 
-OnlyDrawPlayer = DrawPlayer('Draw')
+SingletonDrawPlayer = DrawPlayer('Draw')

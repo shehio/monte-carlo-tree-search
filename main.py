@@ -22,7 +22,8 @@ if __name__ == '__main__':
     p2 = Player('P2', lambda game_state: random.choice(game_state.get_valid_moves()))
     players = [p1, p2]
 
-    game = GameState(np.array([p1, p2]), turn=1)
+    board_size = 3
+    game = GameState(np.array([p1, p2]), turn=1, game_board=np.zeros((board_size, board_size)))
     logging.debug(game)
 
     i = 0
