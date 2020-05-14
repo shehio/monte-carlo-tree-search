@@ -9,15 +9,15 @@ class RolloutStrategyHelper:
     def get_heuristic_move(game_state: GameState) -> int:
         winning_number = game_state.turn * game_state.board_size
 
-        row_sum = game_state.game_board.sum(0)
+        row_sum = game_state.game_board.sum(1)
         for i in range(0, len(row_sum)):
             if row_sum[i] == winning_number - 1:
                 for j in range(0, game_state.board_size):
                     if game_state.game_board[i][j] == 0:
                         return game_state.reverse_move_map[(i, j)]
 
-        col_sum = game_state.game_board.sum(1)
-        for j in range(0, len(row_sum)):
+        col_sum = game_state.game_board.sum(0)
+        for j in range(0, len(col_sum)):
             if col_sum[j] == winning_number - 1:
                 for i in range(0, game_state.board_size):
                     if game_state.game_board[i][j] == 0:
