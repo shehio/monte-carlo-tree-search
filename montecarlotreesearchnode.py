@@ -70,6 +70,8 @@ class MonteCarloTreeSearchNode:
 
     @property
     def win_ratio(self):
+        if self.parent is None:  # In case it's the parent node.
+            return 0
         # If the node hasn't been visited, then the win_ratio (part of ucb) is inf. This means it will be selected.
         if self.visits == 0:
             return np.inf
@@ -89,4 +91,4 @@ class MonteCarloTreeSearchNode:
     def __str__(self):
         return f'TreeNode: {id(self)}, action: {self.action}, number of visits: {self.visits}, ' \
                f'win ratio: {self.win_ratio}, fully expanded: {self.is_fully_expanded}, ' \
-               f'children: {self.children}'
+               f'children: {self.children}, turn: {self.game_state.turn}, game: \n{self.game_state}'
