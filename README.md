@@ -14,3 +14,10 @@ Lee Sedol, Go's world champion at the time.
 * [Stanford's Emma Brunskill on MCTS](https://www.youtube.com/watch?v=vDF1BYWhqL8)
 * [Minimax wikipedia page](https://en.wikipedia.org/wiki/Minimax)
 * This repo was influenced by [int8 mcts](https://github.com/int8/monte-carlo-tree-search)
+
+#### TODOS
+* Add mypy to the build pipeline
+* Provide Unit tests, Tox, and Travis
+* Add Connect 4 and other simple games
+* Add NNs: CNNs and RESNET rather than the rollout strategy
+* Create a chess-playing api executing this code on AWS Lambda or Azure Functions
