@@ -61,7 +61,7 @@ class MonteCarloTreeSearchNode:
         return self.children[np.argmax(ucb_values)]
 
     @staticmethod
-    def get_ucb(child: MonteCarloTreeSearchNode, c):
+    def get_ucb(child: MonteCarloTreeSearchNode, c: float):
         return child.win_ratio + c * np.sqrt(np.log(child.parent.visits) / child.visits)
 
     @staticmethod
@@ -73,6 +73,7 @@ class MonteCarloTreeSearchNode:
         if self.parent is None:  # In case it's the parent node.
             return 0
         # If the node hasn't been visited, then the win_ratio (part of ucb) is inf. This means it will be selected.
+        # One thing to try is wins - loses.
         if self.visits == 0:
             return np.inf
         return self.wins[self.parent.game_state.current_player] / self.visits
@@ -85,10 +86,15 @@ class MonteCarloTreeSearchNode:
     def is_terminal(self):
         return self.game_state.winner is not None
 
+    def __get_self_ucb(self, c=np.sqrt(2)):
+        if self.parent is not None:
+            return self.win_ratio + c * np.sqrt(np.log(self.parent.visits) / self.visits)
+        return 0
+
     def __repr__(self):
         return f'TreeNode: {id(self)}'
 
     def __str__(self):
         return f'TreeNode: {id(self)}, action: {self.action}, number of visits: {self.visits}, ' \
-               f'win ratio: {self.win_ratio}, fully expanded: {self.is_fully_expanded}, ' \
+               f'win ratio: {self.win_ratio}, ucb: {self.__get_self_ucb()} fully expanded: {self.is_fully_expanded}, ' \
                f'children: {self.children}, turn: {self.game_state.turn}, game: \n{self.game_state}'
