@@ -23,9 +23,10 @@ class Minimax:
             elif game_state.is_game_over:
                 return -100, None
 
+        scores = np.array([])
+        valid_moves = game_state.get_valid_moves()
+
         if game_state.current_player == maximizing_player:
-            scores = np.array([])
-            valid_moves = game_state.get_valid_moves()
             for move in valid_moves:
                 new_game_state = game_state.copy().make_move(move)
                 score = Minimax.__minimax_helper(new_game_state, maximizing_player, depth + 1)
@@ -33,24 +34,24 @@ class Minimax:
 
             max_eval = max(scores)
             arg_max_move = valid_moves[np.argmax(scores)]
-            if depth == 0:
-                logging.info('============ MINIMAX ============')
-                logging.info(f'Scores: {scores}')
-                logging.info(f'Moves: {valid_moves}')
-                logging.info(f'Max Eval: {max_eval}')
-                logging.info(f'Arg Max Move: {arg_max_move}')
-                logging.info('============ MINIMAX ============')
+            Minimax.__print_debugging_info(depth, scores, valid_moves, max_eval, arg_max_move)
 
             return max_eval, arg_max_move
 
         else:
-            valid_moves = game_state.get_valid_moves()
-            scores = np.array([])
             for move in valid_moves:
                 new_game_state = game_state.copy().make_move(move)
                 score = Minimax.__minimax_helper(new_game_state, maximizing_player, depth + 1)
                 scores = np.append(scores, score[0])
-            min_eval = min(scores)
-            arg_min_move = valid_moves[np.argmax(scores)]
 
-            return min_eval, None
+            return min(scores), None
+
+    @classmethod
+    def __print_debugging_info(cls, depth, scores, valid_moves, max_eval, arg_max_move):
+        if depth == 0:
+            logging.debug('============ MINIMAX ============')
+            logging.debug(f'Scores: {scores}')
+            logging.debug(f'Moves: {valid_moves}')
+            logging.debug(f'Max Eval: {max_eval}')
+            logging.debug(f'Arg Max Move: {arg_max_move}')
+            logging.debug('============ MINIMAX ============')
