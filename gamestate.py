@@ -37,6 +37,9 @@ class GameState:
 
         return moves
 
+    def copy(self) -> GameState:
+        return GameState(self.players, self.turn, self.game_board.copy())
+
     @property
     def current_player(self):
         if self.turn == -1:

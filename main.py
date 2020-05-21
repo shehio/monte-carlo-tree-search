@@ -5,6 +5,7 @@ import random
 import sys
 
 from gamestate import GameState
+from minimax import Minimax
 from montecarlotreesearch import MonteCarloTreeSearch
 from player import Player
 
@@ -19,7 +20,8 @@ if __name__ == '__main__':
 
     simulation_count = 100
     p1 = Player('P1', partial(partial_mcts, simulation_count))
-    p2 = Player('P2', lambda game_state: random.choice(game_state.get_valid_moves()))
+    p2 = Player('P2', lambda game_state: Minimax.get_best_move(game_state))
+    # p2 = Player('P2', lambda game_state: random.choice(game_state.get_valid_moves()))
     players = [p1, p2]
 
     board_size = 3
